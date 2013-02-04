@@ -29,6 +29,13 @@ local.properties
 .buildpath
 
 #############
+## Maven/Ant
+#############
+target
+dist
+build
+
+#############
 ## Python
 #############
 
