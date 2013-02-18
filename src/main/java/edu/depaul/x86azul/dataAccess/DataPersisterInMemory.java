@@ -3,21 +3,19 @@
  */
 package edu.depaul.x86azul.dataAccess;
 
-import java.util.HashMap;
-import com.javadocmd.simplelatlng.LatLng;
-import com.javadocmd.simplelatlng.Geohasher;
+import java.util.Hashtable;
+import edu.depaul.x86azul.geo.*;
 
 /**
+ *  This class is implemented as a thread-safe Singleton because we only want a single in-memory data persistence layer. 
+ *  Implementation of this class is purely for development purposes and should not be used in production.
  * @author Youssuf ElKalay
  * 
  */
 
 public class DataPersisterInMemory implements DataPersister {
-	/*
-	 * This class is implemented as a thread-safe Singleton because we only want a single in-memory data persistence layer. 
-	 * Implementation of this class is purely for development purposes and should not be used in production.
-	 */
-	private HashMap<String, LatLng> coordGeoHashMap = new HashMap<String, LatLng>();
+
+	private Hashtable<String, Debris> coordGeoHashMap = new Hashtable<String, Debris>();
 
 	private DataPersisterInMemory() {
 
@@ -31,28 +29,36 @@ public class DataPersisterInMemory implements DataPersister {
 		return DataPersisterHolder.INSTANCE;
 	}
 
-	public LatLng get(String geohash) {
-		return coordGeoHashMap.get(geohash);
+	public Debris read(String geoHash) {
+		return coordGeoHashMap.get(geoHash);
 
 	}
 
-	public String insert(LatLng coordinates) {
-		String geohash = Geohasher.hash(coordinates);
-		coordGeoHashMap.put(geohash, coordinates);
-		return geohash;
+	public void write(String geoHash, Debris debris) {
+		coordGeoHashMap.put(geoHash, debris);
 	}
 
-	public void delete(String geohash) {
-		coordGeoHashMap.remove(geohash);
+	public void delete(String geoHash) {
+		coordGeoHashMap.remove(geoHash);
 
 	}
 
-	public boolean contains(LatLng coordinates) {
-		if (!coordGeoHashMap.containsValue(coordinates)) {
+	public boolean find(Debris debris) {
+		if (!coordGeoHashMap.containsValue(debris)) {
 			return false;
 		}
 
 		return true;
 	}
 
+	public boolean find(String geoHash) {
+		if(!coordGeoHashMap.containsKey(geoHash)) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	
+	
 }

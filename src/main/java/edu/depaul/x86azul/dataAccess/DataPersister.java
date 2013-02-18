@@ -3,20 +3,22 @@
  */
 package edu.depaul.x86azul.dataAccess;
 
-import com.javadocmd.simplelatlng.LatLng;
+import edu.depaul.x86azul.geo.*;
 
 /**
  * @author Youssuf ElKalay
  *
  */
 public interface DataPersister {
-	public LatLng get(String geohash);
+	public Debris read(String geohash);
 	
-	public String insert(LatLng coordinates);
+	public void write(String geoHash,Debris debris);
 	
 	public void delete(String hash);
 	
-	public boolean contains(LatLng coordinates);
+	public boolean find(Debris debris);
+	
+	public boolean find(String geoHash);
 	
 	
 }
