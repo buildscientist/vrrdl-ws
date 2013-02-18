@@ -23,4 +23,8 @@ public class DebrisDTO {
 		data.delete(geoHash);
 		
 	}
-}
+	
+	public void removeAllDebris() {
+		data.deleteAll();
+	}
+ }

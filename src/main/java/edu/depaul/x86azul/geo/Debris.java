@@ -27,6 +27,7 @@ public class Debris {
 		latitude = lat;
 		longitude = lng;
 		dateTime = timeDate;
+		setPoint();
 	}
 	
 	public double getLatitude() {

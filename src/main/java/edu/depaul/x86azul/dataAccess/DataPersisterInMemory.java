@@ -4,6 +4,7 @@
 package edu.depaul.x86azul.dataAccess;
 
 import java.util.Hashtable;
+import java.util.Enumeration;
 import edu.depaul.x86azul.geo.*;
 
 /**
@@ -28,10 +29,19 @@ public class DataPersisterInMemory implements DataPersister {
 	public static DataPersister getInstance() {
 		return DataPersisterHolder.INSTANCE;
 	}
+	
 
 	public Debris read(String geoHash) {
 		return coordGeoHashMap.get(geoHash);
 
+	}
+	
+	public Enumeration<String> readAllKeys() {
+		return coordGeoHashMap.keys();
+	}
+	
+	public Enumeration<Debris> readAllValues() {
+		return coordGeoHashMap.elements();
 	}
 
 	public void write(String geoHash, Debris debris) {
@@ -41,6 +51,10 @@ public class DataPersisterInMemory implements DataPersister {
 	public void delete(String geoHash) {
 		coordGeoHashMap.remove(geoHash);
 
+	}
+	
+	public void deleteAll() {
+		coordGeoHashMap.clear();
 	}
 
 	public boolean find(Debris debris) {
