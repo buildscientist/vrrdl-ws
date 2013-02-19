@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.depaul.x86azul.dataAccess;
 
 import java.util.Enumeration;

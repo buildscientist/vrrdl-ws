@@ -15,7 +15,7 @@ public class DebrisDTO {
 
 	}
 
-	public void reportDebris(Debris debris) {
+	public void addDebris(Debris debris) {
 		data.write(debris.getGeoHash(), debris);
 	}
 	

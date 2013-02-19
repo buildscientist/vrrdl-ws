@@ -18,7 +18,6 @@ public class DataPersisterInMemoryTest {
 
 	private static DataPersister data;
 	private Debris debris;
-	private LatLng point;
 	private Date date;
 	private String geoHash;
 	private Enumeration<String> hashEnum;
