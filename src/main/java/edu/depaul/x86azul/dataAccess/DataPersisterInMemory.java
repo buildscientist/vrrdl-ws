@@ -1,16 +1,15 @@
-/**
- * 
- */
 package edu.depaul.x86azul.dataAccess;
 
 import java.util.Hashtable;
 import java.util.Enumeration;
 import edu.depaul.x86azul.geo.*;
 
-/**
+/*
+ * 
+ * @author Youssuf ElKalay
+ * 
  *  This class is implemented as a thread-safe Singleton because we only want a single in-memory data persistence layer. 
  *  Implementation of this class is purely for development purposes and should not be used in production.
- * @author Youssuf ElKalay
  * 
  */
 
@@ -71,6 +70,11 @@ public class DataPersisterInMemory implements DataPersister {
 		}
 		
 		return true;
+	}
+	
+	public Object clone() throws CloneNotSupportedException {
+		return null;
+		
 	}
 
 	

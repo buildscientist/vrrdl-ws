@@ -7,8 +7,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.javadocmd.simplelatlng.*;
 import com.javadocmd.simplelatlng.util.LengthUnit;
@@ -21,6 +24,7 @@ public class DebrisDAOTest {
 	private DebrisDAO dao;
 	private DebrisDTO dto;
 	private Debris debris;
+	private UUID id;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -32,8 +36,9 @@ public class DebrisDAOTest {
 
 	@Before
 	public void setUp() throws Exception {
+		id = UUID.randomUUID();
 		debris = new Debris(LatLng.random().getLatitude(), LatLng.random()
-				.getLongitude(), new Date());
+				.getLongitude(),id.toString(),new Date());
 		dto = new DebrisDTO();
 		dao = new DebrisDAO();
 		dto.addDebris(debris);
@@ -59,7 +64,7 @@ public class DebrisDAOTest {
 		 * reported.
 		 */
 		Debris actual = new Debris(LatLng.random().getLatitude(), LatLng
-				.random().getLongitude(), new Date());
+				.random().getLongitude(),id.toString(),new Date());
 
 		double distance = LatLngTool.distance(actual.getPoint(),
 				debris.getPoint(), LengthUnit.KILOMETER);
@@ -69,7 +74,7 @@ public class DebrisDAOTest {
 	@Test
 	public void testGetAllPointsInRange() {
 		Debris actual = new Debris(LatLng.random().getLatitude(), LatLng
-				.random().getLongitude(), new Date());
+				.random().getLongitude(),id.toString(),new Date());
 		double distance = LatLngTool.distance(actual.getPoint(),
 				debris.getPoint(), LengthUnit.KILOMETER);
 		ArrayList<LatLng> points = dao.getAllPointsInRange(actual, distance);

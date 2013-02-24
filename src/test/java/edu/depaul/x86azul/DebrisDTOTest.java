@@ -2,6 +2,7 @@ package edu.depaul.x86azul;
 
 import static org.junit.Assert.*;
 
+import java.util.UUID;
 import java.util.Date;
 
 import org.junit.After;
@@ -21,6 +22,7 @@ public class DebrisDTOTest {
 	private DebrisDAO dao;
 	private DebrisDTO dto;
 	private Debris debris;
+	private UUID id;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -32,8 +34,9 @@ public class DebrisDTOTest {
 
 	@Before
 	public void setUp() throws Exception {
+		id = UUID.randomUUID();
 		debris = new Debris(LatLng.random().getLatitude(), LatLng.random()
-				.getLongitude(), new Date());
+				.getLongitude(),id.toString(), new Date());
 		dto = new DebrisDTO();
 		dao = new DebrisDAO();
 	}

@@ -1,14 +1,15 @@
 package edu.depaul.x86azul;
 
 import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.UUID;
 
 import edu.depaul.x86azul.dataAccess.*;
 import edu.depaul.x86azul.geo.*;
@@ -22,6 +23,7 @@ public class DataPersisterInMemoryTest {
 	private String geoHash;
 	private Enumeration<String> hashEnum;
 	private Enumeration<Debris> debrisEnum;
+	private UUID id;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -34,9 +36,10 @@ public class DataPersisterInMemoryTest {
 
 	@Before
 	public void setUp() throws Exception {
+		id = UUID.randomUUID();
 		date = new Date();
 		debris = new Debris(LatLng.random().getLatitude(), LatLng.random()
-				.getLongitude(), date);
+				.getLongitude(),id.toString(),date);
 		geoHash = Geohasher.hash(debris.getPoint());
 		data.write(geoHash, debris);
 	}
@@ -80,7 +83,7 @@ public class DataPersisterInMemoryTest {
 	public void testWrite() {
 		date = new Date();
 		debris = new Debris(LatLng.random().getLatitude(), LatLng.random()
-				.getLongitude(), date);
+				.getLongitude(),id.toString(),date);
 		geoHash = Geohasher.hash(debris.getPoint());
 		data.write(geoHash, debris);
 		assertEquals(debris,data.read(geoHash));
