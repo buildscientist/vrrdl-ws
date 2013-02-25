@@ -28,16 +28,15 @@ public class DebrisResource {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addDebris(Debris debris) {
-		if (debris == null) {
+	public Response addDebris(Debris debris) throws IllegalArgumentException, IllegalAccessException {
+		//Explicitly set the point for this debris instance because the LatLng field is ignored by Jackson and it's setter isn't called.
+		//TODO: Find a better way of handling this
+		debris.setPoint();
+		
+		//Basic validation to ensure Debris data members are populated
+		if (debris == null || debris.isNull() == true) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-
-		//TODO: Build validation for Debris() data members
-		
-		// Call setPoint() because Debris() constructor is never called
-		// TODO: Figure out a better way to handle this
-		debris.setPoint();
 
 		DebrisDTO dto = new DebrisDTO();
 		dto.addDebris(debris);
@@ -55,5 +54,6 @@ public class DebrisResource {
 		return Response.ok(debris, MediaType.APPLICATION_JSON).build();
 
 	}
+	
 
 }

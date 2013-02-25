@@ -1,5 +1,6 @@
 package edu.depaul.x86azul.geo;
 
+import java.lang.reflect.Field;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -8,10 +9,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import com.javadocmd.simplelatlng.LatLng;
 import com.javadocmd.simplelatlng.Geohasher;
 
-
 /**
- * A general purpose class used to define Debris. Debris in VRRDL is submitted by client applications. Debris contains a number of fields including lat/long 
- * a date/time representing submission of the debris. 
+ * A general purpose class used to define Debris. Debris in VRRDL is submitted
+ * by client applications. Debris contains a number of fields including lat/long
+ * a date/time representing submission of the debris.
  * 
  * 
  * @author Youssuf ElKalay
@@ -32,23 +33,24 @@ public class Debris {
 	private LatLng point;
 
 	public Debris() {
-		
+
 	}
-	
-	public Debris(double lat, double lng,String id,Date timeDate) {
+
+	public Debris(double lat, double lng, String id, Date timeDate) {
 		uid = id;
 		latitude = lat;
 		longitude = lng;
 		dateTime = timeDate;
-		setPoint();
+		point = new LatLng(latitude, longitude);
 	}
-	
+
+	@Override
 	public String toString() {
-		String debrisString = new String("latitude:" + latitude + "\nlongitude:" + longitude + "\nspeed:" + speed 
-								+ "\nuid:" + uid + "\ntimestamp:" + dateTime.toString());
-		return debrisString;
+		return "Debris [latitude=" + latitude + ", longitude=" + longitude
+				+ ", speed=" + speed + ", uid=" + uid + ", dateTime="
+				+ dateTime + ", point=" + point + "]";
 	}
-	
+
 	public double getLatitude() {
 		return latitude;
 	}
@@ -69,36 +71,51 @@ public class Debris {
 		return dateTime;
 	}
 
-	public void setDateTime(Date dateTime) {
-		this.dateTime = dateTime;
+	public void setDateTime(Date dt) {
+		dateTime = dt;
 	}
-	
+
 	public LatLng getPoint() {
 		return point;
 	}
 
-	public void setPoint() { 
-		point = new LatLng(latitude,longitude);
+	public void setPoint() {
+		point = new LatLng(latitude, longitude);
 	}
 
 	public double getSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(double speed) {
-		this.speed = speed;
+	public void setSpeed(double spd) {
+		speed = spd;
 	}
 
 	public String getUid() {
 		return uid;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setUid(String id) {
+		uid = id;
 	}
-	
+
 	public String getGeoHash() {
 		return Geohasher.hash(point);
+	}
+
+	/**
+	 * Checks the Debris object for any null fields.
+	 * @return boolean
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 */
+	public boolean isNull() throws IllegalArgumentException, IllegalAccessException {
+		for (Field field : getClass().getDeclaredFields()) {
+			if (field.get(this) == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
