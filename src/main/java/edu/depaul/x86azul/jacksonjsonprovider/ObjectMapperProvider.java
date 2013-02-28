@@ -1,6 +1,5 @@
 package edu.depaul.x86azul.jacksonjsonprovider;
 
-
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -17,8 +16,8 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 
 	public ObjectMapperProvider() {
 		objectMapper = new ObjectMapper();
-		objectMapper.configure(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
-
+		objectMapper.configure(
+				SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}
 
 	public ObjectMapper getContext(Class<?> type) {

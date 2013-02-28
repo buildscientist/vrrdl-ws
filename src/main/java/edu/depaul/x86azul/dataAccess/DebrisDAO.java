@@ -28,6 +28,13 @@ public class DebrisDAO {
 		return null;
 	}
 
+	public boolean doesDebrisExist(String geoHash) {
+		if (!data.find(geoHash)) {
+			return false;
+		}
+		return true;
+	}
+	
 	public boolean isDebrisInRange(Debris center, double radius) {
 		CircularWindow window = new CircularWindow(center.getPoint(), radius,
 				LengthUnit.KILOMETER);

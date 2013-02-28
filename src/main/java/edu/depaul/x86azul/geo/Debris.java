@@ -1,6 +1,5 @@
 package edu.depaul.x86azul.geo;
 
-import java.lang.reflect.Field;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -109,12 +108,11 @@ public class Debris {
 	 * @throws IllegalAccessException 
 	 * @throws IllegalArgumentException 
 	 */
-	public boolean isNull() throws IllegalArgumentException, IllegalAccessException {
-		for (Field field : getClass().getDeclaredFields()) {
-			if (field.get(this) == null) {
-				return true;
-			}
+	public boolean containsNullFields() {
+		if(latitude == 0.0 || longitude == 0.0 || uid == null || dateTime == null) {
+			return true;
 		}
+		
 		return false;
 	}
 
