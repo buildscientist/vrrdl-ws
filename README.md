@@ -4,7 +4,7 @@ VRRDL (Vehicle Related Road Debris Locator) is a software system designed to det
 
 VRRDL Web Service
 =================
-VRRDL-WS is a Java based RESTful web service built using [Jersey](http://jersey.java.net) a REST JAX-RS framework. JSON is used the data interchange mechanism using using [Jackson](http://jackson.codehaus.org).
+VRRDL-WS is a Java based RESTful web service built using [Jersey](http://jersey.java.net) a REST JAX-RS framework. JSON is used as the data interchange mechanism using [Jackson](http://jackson.codehaus.org).
 
 
 Installing VRRDL Web Service
