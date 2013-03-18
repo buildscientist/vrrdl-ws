@@ -8,6 +8,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.javadocmd.simplelatlng.LatLng;
+import com.javadocmd.simplelatlng.Geohasher;
+
+import edu.depaul.x86azul.geo.Debris;
 import edu.depaul.x86azul.dataAccess.*;
 
 /**
@@ -37,9 +40,15 @@ public class ProximityResource {
 		}
 		
 		ArrayList<LatLng> nearestPoints = new ArrayList<LatLng>();
+		ArrayList<Debris> nearestDebris = new ArrayList<Debris>();
 		nearestPoints = dao.getAllPointsInRange(center, radius);
-
-		return Response.ok(nearestPoints, MediaType.APPLICATION_JSON).build();
+		
+		for(LatLng point : nearestPoints) {
+			String geohash = Geohasher.hash(point);
+			nearestDebris.add(dao.getDebris(geohash));
+		}
+		
+		return Response.ok(nearestDebris, MediaType.APPLICATION_JSON).build();
 	}
 
 }
