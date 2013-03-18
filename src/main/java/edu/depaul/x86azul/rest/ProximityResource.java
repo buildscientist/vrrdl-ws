@@ -26,7 +26,6 @@ public class ProximityResource {
 			@PathParam("radius") double radius) {
 		DebrisDAO dao = new DebrisDAO();
 		LatLng center = new LatLng(lat, lng);
-		System.out.println(center.toString() + "\nradius:" + radius);
 
 		if (lat == 0.0 || lng == 0.0 || radius == 0.0) {
 			return Response.status(Status.BAD_REQUEST).build();
