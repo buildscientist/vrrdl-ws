@@ -2,7 +2,7 @@ VRRDL
 =================
 VRRDL (Vehicle Related Road Debris Locator) is a software system designed to detect and notify users when they are approaching debris on the road.
 
-[![Build Status](https://travis-ci.org/[x86azul]/[vrrdl-ws].png)](https://travis-ci.org/[x86azul]/[vrrdl-ws])
+[![Build Status](https://travis-ci.org/x86Azul/vrrdl-ws.png?branch=master)](https://travis-ci.org/x86Azul/vrrdl-ws)
 
 
 VRRDL Web Service
