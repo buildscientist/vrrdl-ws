@@ -1,12 +1,12 @@
 package edu.depaul.x86azul.geo;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.javadocmd.simplelatlng.LatLng;
-import com.javadocmd.simplelatlng.Geohasher;
 
 /**
  * A general purpose class used to define Debris. Debris in VRRDL is submitted
@@ -22,32 +22,76 @@ public class Debris {
 	private double latitude;
 	@JsonProperty("longitude")
 	private double longitude;
-	@JsonProperty("speed")
-	private double speed;
 	@JsonProperty("uid")
 	private String uid;
+	@JsonProperty("speed")
+	private double speed;
+	@JsonProperty("accuracy")
+	private double accuracy;
 	@JsonProperty("timestamp")
 	private Date dateTime;
 	@JsonIgnore
 	private LatLng point;
+	@JsonProperty("debrisId")
+	private Long debrisId;
 
 	public Debris() {
 
 	}
 
-	public Debris(double lat, double lng, String id, Date timeDate) {
+	public Debris(	double lat, 
+			double lng, 
+			String id, 
+			double spd,
+			double acc, 
+			Date timeDate) {
+
 		uid = id;
-		latitude = lat;
-		longitude = lng;
+		speed = spd;
+		accuracy = acc;
 		dateTime = timeDate;
+
+		// make sure the coordinate data in web service
+		// conforms to the same precision
+
+		DecimalFormat df  = new DecimalFormat("0.000000");
+		latitude = Double.valueOf(df.format(lat));
+		longitude = Double.valueOf(df.format(lng));
+
 		point = new LatLng(latitude, longitude);
+
+		// this will get overwritten just when this object 
+		// is going to be written into persistent.
+		// just put some random number first
+
+		debrisId = 999L;
+	}
+
+	/**
+	 * This function need to always be manually invoked
+	 * after debris auto-creation resulted from user json 
+	 */
+	public void initAutoVars() {
+
+		// correct the latlng precision
+		DecimalFormat df  = new DecimalFormat("0.000000");
+		latitude = Double.valueOf(df.format(latitude));
+		longitude = Double.valueOf(df.format(longitude));
+
+		point = new LatLng(latitude, longitude);
+		debrisId = 999L;
 	}
 
 	@Override
 	public String toString() {
-		return "Debris [latitude=" + latitude + ", longitude=" + longitude
-				+ ", speed=" + speed + ", uid=" + uid + ", dateTime="
-				+ dateTime + ", point=" + point + "]";
+		return "Debris [latitude=" + latitude + 
+				", longitude=" + longitude + 
+				", uid=" + uid + 
+				", speed=" + speed + 
+				", accuracy=" + accuracy + 
+				", dateTime=" + dateTime + 
+				", point=" + point + 
+				", debrisId=" + debrisId + "]";
 	}
 
 	public double getLatitude() {
@@ -78,8 +122,8 @@ public class Debris {
 		return point;
 	}
 
-	public void setPoint() {
-		point = new LatLng(latitude, longitude);
+	public void setPoint(LatLng pt) {
+		point = pt;
 	}
 
 	public double getSpeed() {
@@ -98,8 +142,12 @@ public class Debris {
 		uid = id;
 	}
 
-	public String getGeoHash() {
-		return Geohasher.hash(point);
+	public Long getDebrisId() {
+		return debrisId;
+	}
+
+	public void setDebrisId(Long id) {
+		debrisId = id;
 	}
 
 	/**
@@ -114,6 +162,29 @@ public class Debris {
 		}
 		
 		return false;
+	}
+
+	/*
+	 * debris is equal if they're at the same location.
+	 * here we assume the latlng value has been converted
+	 * to the same precision
+	 */
+	@Override
+	public boolean equals(Object obj){
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (obj.getClass() != getClass())
+			return false;
+
+		Debris debris = (Debris)obj;
+
+		if( (latitude != debris.getLatitude()) || 
+				(longitude != debris.getLongitude()) )
+			return false;
+
+		return true;
 	}
 
 }

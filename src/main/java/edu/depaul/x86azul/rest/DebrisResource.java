@@ -21,21 +21,26 @@ import edu.depaul.x86azul.dataAccess.*;
 @Path("/debris")
 public class DebrisResource {
 
-	@Path("geohash/{geohash}")
+	@Path("debrisId/{debrisId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findDebrisByGeoHash(@PathParam("geohash") String geohash) {
-		return getDebrisResponse(geohash);
+	public Response findDebrisById(@PathParam("debrisId") Long debrisId) {
+		DebrisDAO dao = new DebrisDAO();
+		Debris debris = dao.getDebris(debrisId);
+		if (debris == null) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 
+		return Response.ok(debris, MediaType.APPLICATION_JSON).build();
 	}
 
-	@Path("geohash/{geohash}")
+	@Path("debrisId/{debrisId}")
 	@DELETE
-	public Response removeDebrisByGeoHash(@PathParam("geohash") String geohash) {
+	public Response removeDebrisById(@PathParam("debrisId") Long debrisId) {
 		DebrisDAO dao = new DebrisDAO();
-		if (dao.doesDebrisExist(geohash)) {
+		if (dao.doesDebrisExist(debrisId)) {
 			DebrisDTO dto = new DebrisDTO();
-			dto.removeDebris(geohash);
+			dto.removeDebris(debrisId);		
 			return Response.ok().build();
 		}
 
@@ -52,22 +57,28 @@ public class DebrisResource {
 		}
 
 		/*
-		 * Explicitly set the point for this debris instance because the LatLng
-		 * /* field is ignored by Jackson and its setter isn't called.
+		 * Explicitly set the non-json vars for this debris instance because those
+		 * /* fields are ignored by Jackson and its setter isn't called.
 		 */
 		// TODO: Find a better way of handling this
-		debris.setPoint();
+		debris.initAutoVars();
 
 		DebrisDAO dao = new DebrisDAO();
-		if (dao.doesDebrisExist(debris.getGeoHash())) {
+		
+		// check if we already have this particular debris
+		Debris similarDebris = dao.getSimilarDebris(debris);
+		
+		if (similarDebris != null) {
+			// already exist, redirect!
 			return Response.seeOther(
-					new URI("/debris/geohash/" + debris.getGeoHash())).build();
+					new URI("/debris/debrisId/" + similarDebris.getDebrisId())).build();
 		}
 
 		DebrisDTO dto = new DebrisDTO();
 		dto.addDebris(debris);
-		String geohash = debris.getGeoHash();
-		return Response.created(new URI("geohash/" + geohash)).build();
+		
+		Long debrisId = debris.getDebrisId();
+		return Response.created(new URI("debrisId/" + debrisId)).build();
 	}
 
 	@Path("/bulk")
@@ -75,7 +86,8 @@ public class DebrisResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response bulkAddDebris(ArrayList<Debris> debrisList) {
-		ArrayList<String> geohashList = new ArrayList<String>();
+
+		ArrayList<Long> debrisIdList = new ArrayList<Long>();
 		DebrisDAO dao = new DebrisDAO();
 		DebrisDTO dto = new DebrisDTO();
 
@@ -93,27 +105,18 @@ public class DebrisResource {
 		}
 
 		for (Debris debris : debrisList) {
-			debris.setPoint();
+			// fill up the auto vars
+			debris.initAutoVars();
+			
 			// Ignore debris that's already been persisted
-			if (dao.doesDebrisExist(debris.getGeoHash())) {
+			if (dao.hasSimilarDebris(debris)) {
 				continue;
 			}
 			dto.addDebris(debris);
-			geohashList.add(debris.getGeoHash());
-		}
-
-		return Response.ok(geohashList, MediaType.APPLICATION_JSON).build();
-
+			debrisIdList.add(debris.getDebrisId());
 	}
 
-	private Response getDebrisResponse(String geohash) {
-		DebrisDAO dao = new DebrisDAO();
-		Debris debris = dao.getDebris(geohash);
-		if (debris == null) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		return Response.ok(debris, MediaType.APPLICATION_JSON).build();
+		return Response.ok(debrisIdList, MediaType.APPLICATION_JSON).build();
 
 	}
 

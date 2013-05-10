@@ -16,11 +16,13 @@ public class DebrisDTO {
 	}
 
 	public void addDebris(Debris debris) {
-		data.write(debris.getGeoHash(), debris);
+		// the debrisId will get automatically calculated 
+		// within data persister
+		data.write(debris);
 	}
 	
-	public void removeDebris(String geoHash) {
-		data.delete(geoHash);
+	public void removeDebris(Long debrisId) {
+		data.delete(debrisId);
 		
 	}
 	

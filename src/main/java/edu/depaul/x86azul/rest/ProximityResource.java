@@ -8,10 +8,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.javadocmd.simplelatlng.LatLng;
-import com.javadocmd.simplelatlng.Geohasher;
-
-import edu.depaul.x86azul.geo.Debris;
 import edu.depaul.x86azul.dataAccess.*;
+import edu.depaul.x86azul.geo.Debris;
 
 /**
  * @author Youssuf ElKalay This REST resource handles any and all actions
@@ -34,21 +32,15 @@ public class ProximityResource {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
-		if (!dao.isDebrisInRange(center, radius)) {
-			return Response.status(Status.NOT_FOUND).build();
+		// get all debrises within this range
+		ArrayList<Debris> debrisList = dao.getAllDebrisesInRange(center, radius);
 
+		// if no such debris exist return NOT_FOUND
+		if(debrisList.size() == 0){
+			return Response.status(Status.NOT_FOUND).build();
 		}
 		
-		ArrayList<LatLng> nearestPoints = new ArrayList<LatLng>();
-		ArrayList<Debris> nearestDebris = new ArrayList<Debris>();
-		nearestPoints = dao.getAllPointsInRange(center, radius);
-		
-		for(LatLng point : nearestPoints) {
-			String geohash = Geohasher.hash(point);
-			nearestDebris.add(dao.getDebris(geohash));
-		}
-		
-		return Response.ok(nearestDebris, MediaType.APPLICATION_JSON).build();
+		return Response.ok(debrisList, MediaType.APPLICATION_JSON).build();
 	}
 
 }

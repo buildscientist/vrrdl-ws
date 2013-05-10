@@ -20,10 +20,12 @@ public class DataPersisterInMemoryTest {
 	private static DataPersister data;
 	private Debris debris;
 	private Date date;
-	private String geoHash;
-	private Enumeration<String> hashEnum;
+	private long debrisId;
+	private Enumeration<Long> idEnum;
 	private Enumeration<Debris> debrisEnum;
 	private UUID id;
+	private double speed;
+	private double accuracy;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -37,11 +39,15 @@ public class DataPersisterInMemoryTest {
 	@Before
 	public void setUp() throws Exception {
 		id = UUID.randomUUID();
+		speed = 20.0;
+		accuracy = 12;
 		date = new Date();
 		debris = new Debris(LatLng.random().getLatitude(), LatLng.random()
-				.getLongitude(),id.toString(),date);
-		geoHash = Geohasher.hash(debris.getPoint());
-		data.write(geoHash, debris);
+				.getLongitude(),id.toString(), speed, accuracy, date);
+		
+		data.write(debris);
+		debrisId = debris.getDebrisId();
+		
 	}
 
 	@After
@@ -57,18 +63,17 @@ public class DataPersisterInMemoryTest {
 
 	@Test
 	public void testRead() {
-		Debris deb = data.read(geoHash);
-		String hash = Geohasher.hash(deb.getPoint());
-		assertEquals(geoHash, hash);
+		Debris deb = data.read(debrisId);
+		assertEquals(debris, deb);
 	}
 
 	@Test
 	public void testReadAllKeys() {
-		hashEnum = data.readAllKeys();
+		idEnum = data.readAllKeys();
 		// Test setup only inserts one Debris object into the data store so we
-		// only expect one geohash
-		String hash = hashEnum.nextElement();
-		assertEquals(geoHash, hash);
+		// only expect one id
+		long id = idEnum.nextElement();
+		assertEquals(debrisId, id);
 	}
 
 	@Test
@@ -83,16 +88,16 @@ public class DataPersisterInMemoryTest {
 	public void testWrite() {
 		date = new Date();
 		debris = new Debris(LatLng.random().getLatitude(), LatLng.random()
-				.getLongitude(),id.toString(),date);
-		geoHash = Geohasher.hash(debris.getPoint());
-		data.write(geoHash, debris);
-		assertEquals(debris,data.read(geoHash));
+				.getLongitude(),id.toString(), speed, accuracy, date);
+		data.write(debris);
+		debrisId = debris.getDebrisId();
+		assertEquals(debris,data.read(debrisId));
 	}
 
 	@Test
 	public void testDelete() {
-		data.delete(geoHash);
-		assertFalse(data.find(geoHash));
+		data.delete(debrisId);
+		assertFalse(data.find(debrisId));
 	}
 
 	@Test
@@ -108,7 +113,7 @@ public class DataPersisterInMemoryTest {
 
 	@Test
 	public void testFindGeoHash() {
-		assertTrue(data.find(geoHash));
+		assertTrue(data.find(debrisId));
 
 	}
 

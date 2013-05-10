@@ -8,17 +8,17 @@ import edu.depaul.x86azul.geo.*;
  *
  */
 public interface DataPersister {
-	public Debris read(String geohash);
+	public Debris read(Long debrisId);
 	
-	public void write(String geoHash,Debris debris);
+	public void write(Debris debris);
 	
-	public void delete(String hash);
+	public void delete(Long debrisId);
 	
 	public void deleteAll();
 	
 	public boolean find(Debris debris);
 	
-	public boolean find(String geoHash);
+	public boolean find(Long debrisId);
 	
 	public Enumeration readAllKeys();
 	

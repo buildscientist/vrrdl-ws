@@ -23,6 +23,8 @@ public class DebrisDTOTest {
 	private DebrisDTO dto;
 	private Debris debris;
 	private UUID id;
+	private double speed;
+	private double accuracy;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -35,8 +37,10 @@ public class DebrisDTOTest {
 	@Before
 	public void setUp() throws Exception {
 		id = UUID.randomUUID();
+		speed = 20.0;
+		accuracy = 12;
 		debris = new Debris(LatLng.random().getLatitude(), LatLng.random()
-				.getLongitude(),id.toString(), new Date());
+				.getLongitude(),id.toString(), speed, accuracy, new Date());
 		dto = new DebrisDTO();
 		dao = new DebrisDAO();
 	}
@@ -49,16 +53,16 @@ public class DebrisDTOTest {
 	public void testAddDebris() {
 		dto.addDebris(debris);
 
-		Debris debris2 = dao.getDebris(debris.getGeoHash());
+		Debris debris2 = dao.getDebris(debris.getDebrisId());
 		assertEquals(debris, debris2);
 	}
 
 	@Test
 	public void testRemoveDebris() {
 		dto.addDebris(debris);
-		dto.removeDebris(debris.getGeoHash());
+		dto.removeDebris(debris.getDebrisId());
 
-		Debris debris2 = dao.getDebris(debris.getGeoHash());
+		Debris debris2 = dao.getDebris(debris.getDebrisId());
 		assertNull(debris2);
 
 	}
@@ -68,7 +72,7 @@ public class DebrisDTOTest {
 		dto.addDebris(debris);
 		dto.removeAllDebris();
 
-		Debris debris2 = dao.getDebris(debris.getGeoHash());
+		Debris debris2 = dao.getDebris(debris.getDebrisId());
 		assertNull(debris2);
 
 	}

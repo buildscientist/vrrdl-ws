@@ -15,7 +15,8 @@ import edu.depaul.x86azul.geo.*;
 
 public class DataPersisterInMemory implements DataPersister {
 
-	private Hashtable<String, Debris> coordGeoHashMap = new Hashtable<String, Debris>();
+	private Hashtable<Long, Debris> coordGeoHashMap = new Hashtable<Long, Debris>();
+	private long counter = 0;
 
 	private DataPersisterInMemory() {
 
@@ -30,12 +31,12 @@ public class DataPersisterInMemory implements DataPersister {
 	}
 	
 
-	public Debris read(String geoHash) {
-		return coordGeoHashMap.get(geoHash);
+	public Debris read(Long debrisId) {
+		return coordGeoHashMap.get(debrisId);
 
 	}
 	
-	public Enumeration<String> readAllKeys() {
+	public Enumeration<Long> readAllKeys() {
 		return coordGeoHashMap.keys();
 	}
 	
@@ -43,12 +44,16 @@ public class DataPersisterInMemory implements DataPersister {
 		return coordGeoHashMap.elements();
 	}
 
-	public void write(String geoHash, Debris debris) {
-		coordGeoHashMap.put(geoHash, debris);
+	public void write(Debris debris) {
+		// increment the counter
+		counter++;
+		// make sure the debris aware of its uuid
+		debris.setDebrisId(counter);
+		coordGeoHashMap.put(counter, debris);
 	}
 
-	public void delete(String geoHash) {
-		coordGeoHashMap.remove(geoHash);
+	public void delete(Long debrisId) {
+		coordGeoHashMap.remove(debrisId);
 
 	}
 	
@@ -57,19 +62,13 @@ public class DataPersisterInMemory implements DataPersister {
 	}
 
 	public boolean find(Debris debris) {
-		if (!coordGeoHashMap.containsValue(debris)) {
-			return false;
-		}
-
-		return true;
+		// this will compare their coordinate as well
+		return coordGeoHashMap.contains(debris);
 	}
 
-	public boolean find(String geoHash) {
-		if(!coordGeoHashMap.containsKey(geoHash)) {
-			return false;
-		}
+	public boolean find(Long debrisId) {
 		
-		return true;
+		return coordGeoHashMap.containsKey(debrisId);
 	}
 	
 	public Object clone() throws CloneNotSupportedException {
