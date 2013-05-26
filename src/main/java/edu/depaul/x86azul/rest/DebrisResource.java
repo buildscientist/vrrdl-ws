@@ -47,7 +47,7 @@ public class DebrisResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addDebris(Debris debris) throws URISyntaxException {
 		// Basic validation to ensure Debris data members are populated
-		if (debris == null || debris.containsNullFields() == true) {
+		if (debris.passesBeanValidation() == false) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 
@@ -86,7 +86,7 @@ public class DebrisResource {
 
 		// First pass for debris with missing/null fields
 		for (Debris debris : debrisList) {
-			if (debris == null || debris.containsNullFields() == true) {
+			if (debris.passesBeanValidation() == false) {
 				return Response.status(Status.BAD_REQUEST).build();
 			}
 

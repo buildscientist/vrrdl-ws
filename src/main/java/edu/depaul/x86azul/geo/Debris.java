@@ -2,6 +2,17 @@ package edu.depaul.x86azul.geo;
 
 import java.util.Date;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -18,18 +29,48 @@ import com.javadocmd.simplelatlng.Geohasher;
  */
 
 public class Debris {
+
+	@JsonIgnore
+	private final int MAXLATITUDE = 90;
+	@JsonIgnore
+	private final int MINLATITUDE = -90;
+	@JsonIgnore
+	private final int MINLONGITUDE = -180;
+	@JsonIgnore
+	private final int MAXLONGITUDE = 180;
+
 	@JsonProperty("latitude")
+	@Min(value = MINLATITUDE)
+	@Max(value = MAXLATITUDE)
 	private double latitude;
+
 	@JsonProperty("longitude")
+	@Min(value = MINLONGITUDE)
+	@Max(value = MAXLONGITUDE)
 	private double longitude;
+
 	@JsonProperty("speed")
 	private double speed;
+
 	@JsonProperty("uid")
+	@NotNull
+	/*
+	 * Android device IDs are 16 character minimum - while iOS device IDs are 40
+	 * characters
+	 */
+	@Size(min = 16)
 	private String uid;
+
 	@JsonProperty("timestamp")
+	@NotNull
+	@Past
 	private Date dateTime;
+
 	@JsonIgnore
 	private LatLng point;
+
+	@JsonIgnore
+	private static Validator validator;
 
 	public Debris() {
 
@@ -102,18 +143,17 @@ public class Debris {
 		return Geohasher.hash(point);
 	}
 
-	/**
-	 * Checks the Debris object for any null fields.
-	 * @return boolean
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
-	 */
-	public boolean containsNullFields() {
-		if(latitude == 0.0 || longitude == 0.0 || uid == null || dateTime == null) {
-			return true;
+	public boolean passesBeanValidation() {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
+		Set<ConstraintViolation<Debris>> constraintViolations = validator
+				.validate(this);
+
+		if (constraintViolations.size() != 0) {
+			return false;
 		}
-		
-		return false;
+
+		return true;
 	}
 
 }
