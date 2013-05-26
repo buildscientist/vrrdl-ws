@@ -51,13 +51,6 @@ public class DebrisResource {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 
-		/*
-		 * Explicitly set the point for this debris instance because the LatLng
-		 * /* field is ignored by Jackson and its setter isn't called.
-		 */
-		// TODO: Find a better way of handling this
-		debris.setPoint();
-
 		DebrisDAO dao = new DebrisDAO();
 		if (dao.doesDebrisExist(debris.getGeoHash())) {
 			return Response.seeOther(
@@ -93,7 +86,6 @@ public class DebrisResource {
 		}
 
 		for (Debris debris : debrisList) {
-			debris.setPoint();
 			// Ignore debris that's already been persisted
 			if (dao.doesDebrisExist(debris.getGeoHash())) {
 				continue;

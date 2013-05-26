@@ -13,6 +13,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -39,29 +40,24 @@ public class Debris {
 	@JsonIgnore
 	private final int MAXLONGITUDE = 180;
 
-	@JsonProperty("latitude")
 	@Min(value = MINLATITUDE)
 	@Max(value = MAXLATITUDE)
 	private double latitude;
 
-	@JsonProperty("longitude")
 	@Min(value = MINLONGITUDE)
 	@Max(value = MAXLONGITUDE)
 	private double longitude;
 
-	@JsonProperty("speed")
 	private double speed;
 
-	@JsonProperty("uid")
 	@NotNull
 	/*
-	 * Android device IDs are 16 character minimum - while iOS device IDs are 40
+	 * Android device IDs are 16 characters minimum - while iOS device IDs are 40
 	 * characters
 	 */
 	@Size(min = 16)
 	private String uid;
 
-	@JsonProperty("timestamp")
 	@NotNull
 	@Past
 	private Date dateTime;
@@ -76,12 +72,17 @@ public class Debris {
 
 	}
 
-	public Debris(double lat, double lng, String id, Date timeDate) {
+	@JsonCreator
+	public Debris(@JsonProperty("latitude") double lat,
+			@JsonProperty("longitude") double lng,
+			@JsonProperty("uid") String id,
+			@JsonProperty("timestamp") Date timeDate) {
 		uid = id;
 		latitude = lat;
 		longitude = lng;
 		dateTime = timeDate;
 		point = new LatLng(latitude, longitude);
+
 	}
 
 	@Override
