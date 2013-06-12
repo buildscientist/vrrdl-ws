@@ -82,5 +82,15 @@ public class DebrisDAOTest {
 		assertFalse(points.isEmpty());
 
 	}
+	
+	@Test
+	public void testGetAllPointByUID() {
+		Debris actual = new Debris(LatLng.random().getLatitude(), LatLng
+				.random().getLongitude(),id.toString(),new Date());
+		dto.addDebris(actual);
+		ArrayList<LatLng> points = dao.getAllPointsByUID(id.toString());
+		assertFalse(points.isEmpty());
+		
+	}
 
 }

@@ -20,9 +20,9 @@ public interface DataPersister {
 	
 	public boolean find(String geoHash);
 	
-	public Enumeration readAllKeys();
+	public Enumeration<String> readAllKeys();
 	
-	public Enumeration readAllValues();
+	public Enumeration<Debris> readAllValues();
 	
 	
 }

@@ -44,7 +44,6 @@ public class DebrisResource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response addDebris(Debris debris) throws URISyntaxException {
 		// Basic validation to ensure Debris data members are populated
 		if (debris.passesBeanValidation() == false) {
@@ -96,8 +95,8 @@ public class DebrisResource {
 
 		return Response.ok(geohashList, MediaType.APPLICATION_JSON).build();
 
-	}
-
+	}	
+	
 	private Response getDebrisResponse(String geohash) {
 		DebrisDAO dao = new DebrisDAO();
 		Debris debris = dao.getDebris(geohash);

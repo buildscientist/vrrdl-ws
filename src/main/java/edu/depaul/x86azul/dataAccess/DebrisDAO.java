@@ -34,7 +34,7 @@ public class DebrisDAO {
 		}
 		return true;
 	}
-	
+
 	public boolean isDebrisInRange(Debris center, double radius) {
 		CircularWindow window = new CircularWindow(center.getPoint(), radius,
 				LengthUnit.KILOMETER);
@@ -94,6 +94,18 @@ public class DebrisDAO {
 
 		}
 
+		return pointList;
+	}
+
+	public ArrayList<LatLng> getAllPointsByUID(String uid) {
+		Enumeration<Debris> e = data.readAllValues();
+		ArrayList<LatLng> pointList = new ArrayList<LatLng>();
+		while (e.hasMoreElements()) {
+			String id = e.nextElement().getUid();
+			if (id.equals(uid)) {
+				pointList.add(e.nextElement().getPoint());
+			}
+		}
 		return pointList;
 	}
 
