@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.depaul.x86azul</groupId>
 	<artifactId>vrrdl-ws</artifactId>
-	<version>0.0.15-SNAPSHOT</version>
+	<version>0.0.16-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<description>VRRDL Web Service</description>
 	<dependencies>
@@ -56,12 +56,6 @@
 		<dependency>
 			<groupId>com.sun.jersey.jersey-test-framework</groupId>
 			<artifactId>jersey-test-framework-http</artifactId>
-			<version>1.17</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey.jersey-test-framework</groupId>
-			<artifactId>jersey-test-framework-grizzly2</artifactId>
 			<version>1.17</version>
 			<scope>test</scope>
 		</dependency>

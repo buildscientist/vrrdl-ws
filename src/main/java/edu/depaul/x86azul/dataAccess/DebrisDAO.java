@@ -101,9 +101,10 @@ public class DebrisDAO {
 		Enumeration<Debris> e = data.readAllValues();
 		ArrayList<LatLng> pointList = new ArrayList<LatLng>();
 		while (e.hasMoreElements()) {
-			String id = e.nextElement().getUid();
+			Debris debris = e.nextElement();
+			String id = debris.getUid();
 			if (id.equals(uid)) {
-				pointList.add(e.nextElement().getPoint());
+				pointList.add(debris.getPoint());
 			}
 		}
 		return pointList;
